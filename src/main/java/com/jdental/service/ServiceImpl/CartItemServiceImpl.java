@@ -28,4 +28,11 @@ public class CartItemServiceImpl implements CartItemService {
 
         return cartItem;
     }
+
+    public CartItem addToCart(CartItem cartItem) {
+        CartItem target = new CartItem(); 
+        target = cartItem;
+        return cartItemDao.save(target);
+    }
+
 }

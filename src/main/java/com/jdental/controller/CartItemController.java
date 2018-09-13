@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,57 +36,21 @@ import com.jdental.service.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/cart")
-public class CartController {
+@RequestMapping("/addToCart")
+public class CartItemController {
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private ItemService itemService;
-
-    @Autowired
-    private CartService cartService;
-    
-    @Autowired
     private CartItemService cartItemService;
 
-    @GetMapping("/{username}")
-    public Cart getCart(@PathVariable String username) {
-        Cart cart = cartService.findCartByUsername(username);
-        return  cart;
+
+    @PostMapping
+    public CartItem addToCart(@RequestBody CartItem cartItem){
+        return cartItemService.addToCart(cartItem);
     }
 
-    ///////last try
-
-    // @GetMapping
-    // public List<Cart> getCart(){
-    //     return cartService.getCart();
-    // }
-
-
-    // @DeleteMapping(value = "/delete")
-    // public void removeCart(Cart cart){
-    //     cartService.removeCart(cart);
-    // }
-
-
-
-    // @RequestMapping(value = "/userMain", method = RequestMethod.POST)
-    // public String profilePost(@ModelAttribute("user") User newUser, Model model) {
-    //     User user = userService.findByUsername(newUser.getUsername());
-    //     user.setUsername(newUser.getUsername());
-    //     user.setFirstName(newUser.getFirstName());
-    //     user.setLastName(newUser.getLastName());
-    //     user.setEmail(newUser.getEmail());
-    //     user.setPhone(newUser.getPhone());
-
-    //     model.addAttribute("user", user);
-
-    //     userService.saveUser(user);
-
-    //     return "userMain";
-    // }
 
 
 }

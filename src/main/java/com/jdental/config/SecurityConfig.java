@@ -55,9 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/login",
             "/index",
             "/index#0",
-            "/items",
-            "/user/**",
-            "/cart/**"
+            "/user/**"
     };
 
     // @Bean

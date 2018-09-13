@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.jdental.dao.RoleDao;
-import com.jdental.domain.Appointment;
 import com.jdental.domain.Item;
 import com.jdental.domain.User;
 import com.jdental.domain.security.UserRole;

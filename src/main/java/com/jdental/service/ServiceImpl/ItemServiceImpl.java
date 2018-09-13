@@ -1,8 +1,4 @@
-package com.jdental.service;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+package com.jdental.service.ServiceImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,12 +7,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import com.jdental.dao.ItemDao;
-import com.jdental.dao.RoleDao;
-import com.jdental.dao.UserDao;
 import com.jdental.domain.Item;
-import com.jdental.domain.security.UserRole;
-import com.jdental.service.UserService;
+import com.jdental.service.ItemService;
 
 @Service
 @Transactional

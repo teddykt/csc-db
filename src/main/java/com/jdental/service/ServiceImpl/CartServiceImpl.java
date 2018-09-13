@@ -63,10 +63,6 @@ public class CartServiceImpl implements CartService{
     }
 
     ///last try
-	public CartItem addToCart(CartItem cartItem) {
-        cartItemDao.save(cartItem);
-        return cartItem;
-    }
 
 	@Override
 	public Cart findByUser(User user) {

@@ -17,8 +17,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 @Entity
 @Table(name = "cartItem")
+@PreAuthorize("hasRole('USER')")
 public class CartItem {
 
     @Id
@@ -28,10 +31,12 @@ public class CartItem {
     private int qty;
     private BigDecimal subTotal;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
+	@JoinColumn(name ="item_id")
     private Item item;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+	@JoinColumn(name ="cart_id")
     private Cart cart;
 
 	public BigDecimal getSubTotal() {
