@@ -1,0 +1,174 @@
+$color-primary: rgb(61, 183, 240);
+$color-primary-2: rgba(38, 155, 209, 0.74);
+$color-primary-light: rgb(252, 252, 252);
+$color-primary-dark: rgba(84, 190, 223, 0.842);
+$color-primary-topnav: rgb(29, 157, 216);
+
+$color-grey-dark: #777;
+$color-grey-dark-2: #999;
+$color-grey-dark-3: #333;
+
+
+$color-white: #fff;
+$color-black: #000;
+
+$default-font-size: 1.6rem; 
+
+$grid-width: 114rem; 
+$gutter-vertical: 8rem; 
+$gutter-vertical-small: 6rem; 
+$gutter-horizontal: 6rem; 
+	
+h1{
+    text-transform: uppercase;
+}
+
+
+
+//userMain.scss 
+
+#card{
+    position: relative;
+    top: 6rem;
+    transform-style: preserve-3d;
+    // transition: transform 1s;
+    perspective: 150rem; 
+    -moz-perspective: 150rem;
+    height: 35rem;
+    width: 25rem;
+    border: .5rem solid $color-primary;
+    border-radius: 2rem;
+    padding: 1.5rem 2rem;
+    transition: all .8s ease;
+    text-align: center;
+    background-image: linear-gradient(to right bottom, $color-primary-light, $color-primary-dark);
+    box-shadow: 0 1.5rem 4rem rgba($color-black, .25);
+}
+  
+#card figure {
+    margin: 0;
+    display: inline-block;
+    position: absolute;
+    top: 0.5rem;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+  
+#card .front {
+}
+  
+#card .back {
+    transform: rotateY(180deg);
+}
+  
+#card.flipped {
+    transform: rotateY(180deg);
+}
+
+
+
+// buttons 
+
+.button{
+    border: none;
+    border-radius: 50px;
+    color: $color-black;
+    padding: 1rem 1rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 10px 5px;
+    // position: relative;
+    -webkit-transition-duration: all 0.2s; /* Safari */
+    transition-duration: all .2s;
+    cursor: pointer;
+    
+
+    &--primary{
+        background-color: $color-white;
+        border: 2px solid $color-primary;
+        position: relative;
+        top: 10rem;
+        left: 25%;
+
+
+        &:hover{
+            background-color: $color-primary;
+            color: $color-primary-light;
+            box-shadow: 0 1rem .5rem rgba($color-black,.2);
+            transform: scaleX(1.1) scaleY(1.1);
+        }
+
+        &:focus{
+            outline:none;
+        }
+
+        &:active{
+    
+            box-shadow: 0 1rem .5rem rgba($color-black,.2);
+            transform: translateY(4px);
+        }
+    }
+
+    &--edit{
+        margin: 20px 3px;
+        background-color: $color-primary-light;
+        border: 2px solid #4CAF50;
+        backface-visibility: hidden;
+        
+
+        &:hover{
+            background-color: #4CAF50;
+            color: $color-white;
+            box-shadow: 0 1rem .5rem rgba($color-black,.2);
+            transform: scaleX(1.2) scaleY(1.2);
+            backface-visibility: hidden;
+        }
+
+        &:focus{
+            outline:none;
+        }
+
+        &:active{
+    
+            box-shadow: 0 1rem .5rem rgba($color-black,.2);
+            transform: translateY(4px);
+        }
+    }
+
+    &--change{
+        margin: 20px 3px;
+        background-color: $color-primary-light;
+        border: 2px solid rgb(255, 107, 70);
+
+        &:hover{
+            background-color: rgb(255, 107, 70);
+            color: $color-white;
+            box-shadow: 0 1rem .5rem rgba($color-black,.2);
+            transform: scaleX(1.1) scaleY(1.1);
+        }
+
+        &:focus{
+            outline:none;
+        }
+
+        &:active{
+    
+            box-shadow: 0 1rem .5rem rgba($color-black,.2);
+            transform: translateY(4px);
+        }
+    }
+}
+
+.description{
+	position: absolute;
+	top: 45rem;
+}
+
+
+
+  
+		
+
