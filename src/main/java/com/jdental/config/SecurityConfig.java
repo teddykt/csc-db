@@ -3,6 +3,7 @@ package com.jdental.config;
 import java.security.SecureRandom;
 
 import com.jdental.service.UserService;
+import com.jdental.service.ServiceImpl.UserSecurityService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private Environment env;
 
     @Autowired
-    private com.jdental.service.ServiceImpl.UserSecurityService userSecurityService;
+    private UserSecurityService userSecurityService;
 
     private static final String SALT = "salt";
     
@@ -54,7 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/ea",
             "/login",
             "/index",
-            "/index#0",
+            "/success",
+            "/signin",
             "/user/**"
     };
 
@@ -83,7 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated();
         http
            
-            .formLogin().failureUrl("/index?error").defaultSuccessUrl("/appointment").loginPage("/index").permitAll()
+            .formLogin().failureUrl("/index?error").defaultSuccessUrl("/success").loginPage("/index").permitAll()
             .and()
             .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/index?logout").deleteCookies("remember-me").permitAll();
          

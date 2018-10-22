@@ -49,9 +49,9 @@ public class HomeController {
 			return "login";
 
 		}
-		@RequestMapping("/appointment")
-		public String appointment() {
-			return "appointment";
+		@RequestMapping("/success")
+		public String success() {
+			return "/success";
 
 		}
 

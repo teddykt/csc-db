@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 @Entity
@@ -31,7 +32,7 @@ public class Cart {
     private User user;
 
     @OneToMany(mappedBy="cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CartItem> cartItemList;
+    private List<CartItem> cartItem;
 
     public Long getId() {
         return id;
@@ -54,11 +55,11 @@ public class Cart {
         this.grandTotal = grandTotal;
     }
 
-    public List<CartItem> getCartItemList() {
-        return cartItemList;
+    public List<CartItem> getCartItem() {
+        return cartItem;
     }
-    public void setCartItemList(List<CartItem> item) {
-        this.cartItemList = item;
+    public void setCartItem(List<CartItem> cartItem) {
+        this.cartItem = cartItem;
     }
 }
 

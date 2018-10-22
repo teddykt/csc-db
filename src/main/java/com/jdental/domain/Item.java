@@ -41,6 +41,12 @@ public class Item {
     @OneToMany( mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CartItem> cartItem;
 
+    public List<CartItem> getCartItem() {
+        return cartItem;
+    }
+    public void setCartItem(List<CartItem> cartItem) {
+        this.cartItem = cartItem;
+    }
     public Long getId() {
 		return id;
 	}
