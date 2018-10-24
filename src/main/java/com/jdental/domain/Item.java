@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mysql.jdbc.Blob;
 
 @Entity
 @Table(name = "item")
@@ -37,6 +38,10 @@ public class Item {
     private String type;
     @Column
     private String category;
+	@Column
+	private Blob img1;
+	@Column
+	private Blob img2;
 
     @OneToMany( mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CartItem> cartItem;
