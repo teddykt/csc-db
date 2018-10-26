@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.jdental.domain.User;
-import com.jdental.domain.security.UserRole;
+import com.jdental.domain.security.Role;
 
 public interface UserService {
 	User findByUsername(String username);
@@ -17,7 +17,7 @@ public interface UserService {
 	
 	boolean checkUserExists(String username, String email);
 	
-	User createUser(User user, Set<UserRole> userRoles);
+	User createUser(User user);
 
     void save (User user);
     

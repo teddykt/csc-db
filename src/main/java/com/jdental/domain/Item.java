@@ -38,12 +38,13 @@ public class Item {
     private String type;
     @Column
     private String category;
-	@Column
-	private Blob img1;
-	@Column
-	private Blob img2;
+	// @Column
+	// private Blob img1;
+	// @Column
+	// private Blob img2;
 
-    @OneToMany( mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany( mappedBy = "item", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
     private List<CartItem> cartItem;
 
     public List<CartItem> getCartItem() {

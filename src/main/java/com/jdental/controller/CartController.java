@@ -26,7 +26,6 @@ import com.jdental.domain.Cart;
 import com.jdental.domain.CartItem;
 import com.jdental.domain.Item;
 import com.jdental.domain.User;
-import com.jdental.domain.security.UserRole;
 import com.jdental.service.CartItemService;
 import com.jdental.service.CartService;
 import com.jdental.service.ItemService;

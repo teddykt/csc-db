@@ -23,14 +23,12 @@ import com.jdental.domain.Cart;
 import com.jdental.domain.CartItem;
 import com.jdental.domain.Item;
 import com.jdental.domain.User;
-import com.jdental.domain.security.UserRole;
 import com.jdental.service.CartItemService;
 import com.jdental.service.CartService;
 import com.jdental.service.UserService;
 
 @Service
 public class CartServiceImpl implements CartService{
-	private  static final Logger LOG = LoggerFactory.getLogger(UserSecurityService.class);
 
 	@Autowired
     private CartDao cartDao;

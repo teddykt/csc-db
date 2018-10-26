@@ -27,7 +27,6 @@ import com.jdental.domain.Cart;
 import com.jdental.domain.CartItem;
 import com.jdental.domain.Item;
 import com.jdental.domain.User;
-import com.jdental.domain.security.UserRole;
 import com.jdental.service.CartItemService;
 import com.jdental.service.CartService;
 import com.jdental.service.ItemService;
@@ -36,7 +35,7 @@ import com.jdental.service.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/addToCart")
+@RequestMapping("/cartItem")
 public class CartItemController {
 
     @Autowired
@@ -46,9 +45,19 @@ public class CartItemController {
     private CartItemService cartItemService;
 
 
-    @PostMapping
+    @PostMapping("/add")
     public CartItem addToCart(@RequestBody CartItem cartItem){
         return cartItemService.addToCart(cartItem);
+    }
+
+    @PostMapping("/get")
+    public List<CartItem> addToCart(@RequestBody Cart cart){
+        return cartItemService.findByCart(cart);
+    }
+
+    @PostMapping("/delete")
+    public void removeCartItem(@RequestBody CartItem cartItem){
+        cartItemService.deleteById(cartItem.getId());
     }
 
 

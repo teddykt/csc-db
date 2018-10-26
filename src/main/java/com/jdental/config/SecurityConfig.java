@@ -1,107 +1,119 @@
 package com.jdental.config;
 
-import java.security.SecureRandom;
-
-import com.jdental.service.UserService;
-import com.jdental.service.ServiceImpl.UserSecurityService;
+import com.google.common.collect.Lists;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Value("${security.signing-key}")
+    private String signingKey;
+
+    @Value("${security.encoding-strength}")
+    private Integer encodingStrength;
+
+    @Value("${security.security-realm}")
+    private String securityRealm;
 
     @Autowired
-    private Environment env;
+    private PasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private UserSecurityService userSecurityService;
+    private UserDetailsService userDetailsService;
 
-    private static final String SALT = "salt";
-    
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12, new SecureRandom(SALT.getBytes()));
+    @Override
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
     }
 
-    private static final String[] PUBLIC_MATCHERS = {
-            "/webjars/**",
-            "/css/**",
-            "/js/**",
-            "/images/**",
-            "/",
-            "/about/**",
-            "/contact/**",
-            "/error/**/*",
-            "/console/**",
-            "/signup",
-            "/booking",
-            "/ea",
-            "/login",
-            "/index",
-            "/success",
-            "/signin",
-            "/user/**"
-    };
-
-    // @Bean
-	// public WebMvcConfigurer corsConfigurer() {
-	//     return new WebMvcConfigurer() {
-	//         @Override
-	//         public void addCorsMappings(CorsRegistry registry) {
-	//             registry.addMapping("/**").allowedOrigins("http://localhost:4200");
-	          
-	//         }
-	//     };
-    // }
-    
-    // 	// getting token
-	// @Bean
-	// HeaderHttpSessionIdResolver sessionStrategy() {
-	// 	return new HeaderHttpSessionIdResolver("X-Auth-Token");
-	// }
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .authorizeRequests()
-            .antMatchers(PUBLIC_MATCHERS).permitAll()
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and().httpBasic().realmName(securityRealm)
+            .and().csrf().disable();
+        http.authorizeRequests()
+        .antMatchers("/oauth/token/revokeById/**").permitAll()
+        .antMatchers("/tokens/**").permitAll();
+            
+        http.authorizeRequests()
+            .antMatchers("/users/register").permitAll()
             .anyRequest().authenticated();
-        http
-           
-            .formLogin().failureUrl("/index?error").defaultSuccessUrl("/success").loginPage("/index").permitAll()
-            .and()
-            .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/index?logout").deleteCookies("remember-me").permitAll();
-         
-
-    //       .and().csrf().disable();
-              
-         http 
-            .csrf().disable().cors().disable();
-    }
-    
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-  	//  auth.inMemoryAuthentication().withUser("user").password("password").roles("USER"); //This is in-memory authentication
-        auth.userDetailsService(userSecurityService).passwordEncoder(passwordEncoder());
     }
 
+    // @Override
+    // public void configure(WebSecurity web) throws Exception {
+    //     web.ignoring().antMatchers("**");
+	// }
 
+    @Bean
+    public JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setSigningKey(signingKey);
+        return converter;
+    }
+
+    @Bean
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(accessTokenConverter());
+    }
+
+    @Bean
+    public TokenEnhancerChain tokenEnhancerChain() {
+        final TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(Lists.newArrayList(new MyTokenEnhancer(), accessTokenConverter()));
+        return tokenEnhancerChain;
+    }
+
+    @Bean
+    public DefaultTokenServices defaultTokenServices() {
+        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(tokenStore());
+        // defaultTokenServices.setClientDetailsService(clientDetailsService);
+        defaultTokenServices.setTokenEnhancer(tokenEnhancerChain());
+        defaultTokenServices.setSupportRefreshToken(true);
+        return defaultTokenServices;
+    }
+
+    private static class MyTokenEnhancer implements TokenEnhancer {
+        @Override
+        public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+            // TODO Auto-generated method stub
+            return accessToken;
+        }
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

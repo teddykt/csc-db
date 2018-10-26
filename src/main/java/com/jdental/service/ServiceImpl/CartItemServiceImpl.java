@@ -30,11 +30,14 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     public CartItem addToCart(CartItem cartItem) {
-        return cartItem;
+        return cartItemDao.save(cartItem);
 
         // CartItem target = new CartItem(); 
         // target = cartItem;
         // return cartItemDao.save(target);
     }
 
+        public void deleteById(Long id) {
+            cartItemDao.deleteById(id);
+        }
 }

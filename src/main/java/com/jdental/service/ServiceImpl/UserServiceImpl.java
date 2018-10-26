@@ -1,6 +1,7 @@
 package com.jdental.service.ServiceImpl;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -12,12 +13,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jdental.dao.CartDao;
 import com.jdental.dao.RoleDao;
 import com.jdental.dao.UserDao;
 import com.jdental.domain.Cart;
-import com.jdental.domain.Cart;
 import com.jdental.domain.User;
-import com.jdental.domain.security.UserRole;
+import com.jdental.domain.security.Role;
 import com.jdental.service.UserService;
 
 @Service
@@ -31,7 +32,10 @@ public class UserServiceImpl implements UserService{
 	private UserDao userDao;
 	
 	@Autowired
-    private RoleDao roleDao;  
+    private RoleDao roleDao; 
+    
+	@Autowired
+    private CartDao cartDao;  
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -75,7 +79,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-	 public User createUser(User user, Set<UserRole> userRoles) {
+    public User createUser(User user) {
         User localUser = userDao.findByUsername(user.getUsername());
 
         if (localUser != null) {
@@ -84,18 +88,15 @@ public class UserServiceImpl implements UserService{
             String encryptedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encryptedPassword);
 
-            for (UserRole ur : userRoles) {
-                roleDao.save(ur.getRole());
-            }
-
-            user.getUserRoles().addAll(userRoles);
+            Role role = roleDao.findByName("USER");
+            List<Role> roles = Arrays.asList(role);
+            user.setRoles(roles);
 
             Cart cart = new Cart();
             BigDecimal total = new BigDecimal(0.00);
             cart.setGrandTotal(total);
             cart.setUser(user);
-            user.setCart(cart);
-
+            cartDao.save(cart);
             localUser = userDao.save(user);
         }
 
@@ -111,7 +112,7 @@ public class UserServiceImpl implements UserService{
     
 	 public List<User> findUserList() {
 		 return userDao.findAll();
-	 }
+    }
 	 
 	//  public void enableUser(String username) {
 	// 	 User user = findByUsername(username);

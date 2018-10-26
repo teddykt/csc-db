@@ -1,6 +1,7 @@
 package com.jdental.controller;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,14 +22,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jdental.dao.RoleDao;
+import com.jdental.domain.Cart;
 import com.jdental.domain.Item;
 import com.jdental.domain.User;
-import com.jdental.domain.security.UserRole;
+import com.jdental.domain.security.Role;
 import com.jdental.service.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -37,21 +38,15 @@ public class UserController {
     @Autowired
     private RoleDao roleDao;
 
-    @GetMapping(value = "/{username}")
+    @GetMapping(value = "/user/{username}")
     public User getUser(@PathVariable String username) {
         return userService.findByUsername(username);
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/users/register", method = RequestMethod.POST)
     public User create(@RequestBody User user){
-        if(userService.checkUserExists(user.getUsername(), user.getEmail())) {
 
-            JOptionPane.showMessageDialog(null, " username exist already", "TITLE", JOptionPane.WARNING_MESSAGE);
-        }
-        
-        Set<UserRole> userRoles = new HashSet<>();
-        userRoles.add(new UserRole(user, roleDao.findByName("ROLE_USER")));
-        return userService.createUser(user, userRoles);
+        return userService.createUser(user);
     }
 
 

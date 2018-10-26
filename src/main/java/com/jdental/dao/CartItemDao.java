@@ -9,4 +9,5 @@ import com.jdental.domain.CartItem;
 
 public interface CartItemDao extends CrudRepository<CartItem, Long> {
     List<CartItem> findByCart(Cart cart);
+    void deleteById(Long id);
 }

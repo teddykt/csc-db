@@ -16,9 +16,7 @@ import com.jdental.service.ItemService;
 @Service
 @Transactional
 public class ItemServiceImpl implements ItemService{
-	
-	private static final Logger LOG = LoggerFactory.getLogger(ItemService.class);
-	
+
 
 	@Autowired
 	private ItemDao itemDao;

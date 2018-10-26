@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.jdental.dao.RoleDao;
 import com.jdental.domain.Item;
 import com.jdental.domain.User;
-import com.jdental.domain.security.UserRole;
 import com.jdental.service.UserService;
 
 @Controller
@@ -62,23 +61,6 @@ public class HomeController {
 			model.addAttribute("user", user);
 	
 			return "signup";
-		}
-		
-		@RequestMapping(value = "/signup", method = RequestMethod.POST)
-		public String signupPost(@ModelAttribute("user") User user, Model model) {
-			if(userService.checkUserExists(user.getUsername(), user.getEmail())) {
-				
-				model.addAttribute("usernameExists", true);
-				return "index";
-			}
-			else {
-				Set<UserRole> userRoles = new HashSet<>();
-				userRoles.add(new UserRole(user, roleDao.findByName("ROLE_USER")));
-				
-				userService.createUser(user, userRoles);
-				
-				return "redirect:/";
-			}
 		}
 
 		// @RequestMapping("/userMain") 

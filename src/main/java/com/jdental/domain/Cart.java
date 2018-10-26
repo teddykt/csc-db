@@ -18,6 +18,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "cart")
 public class Cart {
@@ -28,10 +30,12 @@ public class Cart {
     private Long id;
     private BigDecimal grandTotal;
 
-    @OneToOne(cascade = CascadeType.ALL,  fetch = FetchType.LAZY)
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy="cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<CartItem> cartItem;
 
     public Long getId() {
